@@ -1,0 +1,14 @@
+{
+  "markdown": {
+  },
+  "toml": {
+  },
+  "ruff": {
+  },
+  "excludes": [],
+  "plugins": [
+    "npm:@dprint/markdown@0.24.0",
+    "npm:@dprint/toml@0.8.0",
+    "npm:@dprint/ruff@0.8.7"
+  ]
+}

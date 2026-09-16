@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "ansys-speos-plot"
+description = "Parse Ansys SPEOS irradiance cross-section TXT files and produce matplotlib figures."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+version = "0.1.0"
+
+dependencies = [
+  "matplotlib",
+  "numpy",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "scipy",
+  "pillow",
+  "tqdm",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["lib*"]

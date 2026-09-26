@@ -1,10 +1,6 @@
-"""Entry point that produces both the channel plot and the irradiance + cuts plot.
-
-When ``--save`` is omitted the output is written to ``./figures/`` under a
-subdirectory named after the input file -- e.g. ``./data/plane.txt`` produces
-``./figures/plane/channels.png`` and ``./figures/plane/irradiance.png``.
-
-When ``--path`` is omitted, all ``.txt`` files in ``./data/`` are processed.
+"""
+Entry point that produces both the channel plot and the irradiance + cuts plot.
+check --help or readme for more
 """
 
 from pathlib import Path

@@ -49,6 +49,13 @@ def read_data(path):
     if not datasets:
         raise ValueError(f"No data matrices could be parsed from {path!r}.")
 
+    # Rotate to landscape if the data matrix is taller than it is wide.
+    shape = datasets[0].shape
+    if shape[0] > shape[1]:
+        xmin, xmax, ymin, ymax = extent
+        extent = [ymin, ymax, xmin, xmax]
+        datasets = [d.T for d in datasets]
+
     vmin = min(d.min() for d in datasets)
     vmax = max(d.max() for d in datasets)
     norm = Normalize(vmin=vmin, vmax=vmax)

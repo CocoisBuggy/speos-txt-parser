@@ -16,7 +16,10 @@ from lib.output import auto_save_path
 from plot_channels import main as plot_channels
 from plot_irradiance import main as plot_irradiance
 
-plotters = [plot_channels, plot_irradiance]
+plotters = [
+    (plot_channels, "channels"),
+    (plot_irradiance, "irrandiance"),
+]
 
 
 def main():
@@ -25,8 +28,8 @@ def main():
     paths = [args.path] if args.path else sorted(Path("data").rglob("*.txt"))
     for txt in tqdm(paths, desc="Generating plots"):
         args.path = str(txt)
-        for plotter in plotters:
-            args.save = base_save or auto_save_path(args.path, plotter.__name__)
+        for plotter, name in plotters:
+            args.save = base_save or auto_save_path(args.path, name)
             plotter(args)
 
 

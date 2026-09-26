@@ -24,7 +24,7 @@ def main():
         ax.set_ylabel("Y (deg)")
 
         if i == len(bands) - 1:
-            fig.colorbar(im, ax=axes[:, -1], label="W/m$^2$")
+            fig.colorbar(im, ax=axes[:, -1], label=args.ylabel)
 
     fig.suptitle("Irradiance by elevation band (shared scale)")
 

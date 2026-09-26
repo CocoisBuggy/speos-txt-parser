@@ -43,27 +43,27 @@ def make_axes(fig):
     return ax_map, ax_horizontal, ax_vertical
 
 
-def plot_horizontal_cut(ax, x_coords, horizontal_profile, y_center):
+def plot_horizontal_cut(ax, x_coords, horizontal_profile, y_center, ylabel):
     ax.plot(x_coords, horizontal_profile)
     ax.grid(True)
     ax.set_xlabel("X (deg)")
-    ax.set_ylabel("W/m$^2$")
+    ax.set_ylabel(ylabel)
     ax.set_title(f"Y = {y_center:.2f} deg")
 
 
-def plot_vertical_cut(ax, vertical_profile, y_coords, x_center, extent):
+def plot_vertical_cut(ax, vertical_profile, y_coords, x_center, extent, ylabel):
     _, _, ymin, ymax = extent
 
     ax.plot(vertical_profile, y_coords)
     ax.grid(True)
-    ax.set_xlabel("W/m$^2$")
+    ax.set_xlabel(ylabel)
     ax.set_ylabel("Y (deg)")
     ax.set_title(f"X = {x_center:.2f} deg", pad=14)
     plt.setp(ax.get_xticklabels(), rotation=90)
     ax.set_ylim(ymin, ymax)
 
 
-def line_cuts(data, extent, cmap):
+def line_cuts(data, extent, cmap, ylabel):
     centers = compute_centers(extent)
     x_center, y_center = centers
     x_coords, y_coords, vertical_profile, horizontal_profile = extract_cuts(
@@ -74,10 +74,10 @@ def line_cuts(data, extent, cmap):
     ax_map, ax_horizontal, ax_vertical = make_axes(fig)
 
     im = plot_map(ax_map, data, extent, (x_center, y_center), cmap)
-    fig.colorbar(im, ax=ax_map, label="W/m$^2$")
+    fig.colorbar(im, ax=ax_map, label=ylabel)
 
-    plot_horizontal_cut(ax_horizontal, x_coords, horizontal_profile, y_center)
-    plot_vertical_cut(ax_vertical, vertical_profile, y_coords, x_center, extent)
+    plot_horizontal_cut(ax_horizontal, x_coords, horizontal_profile, y_center, ylabel)
+    plot_vertical_cut(ax_vertical, vertical_profile, y_coords, x_center, extent, ylabel)
 
     return fig, (ax_map, ax_horizontal, ax_vertical)
 
@@ -85,11 +85,11 @@ def line_cuts(data, extent, cmap):
 def main():
     args = get_args()
 
-    extent, datasets, bands = read_data(args.path)[1:]
+    extent, datasets, _ = read_data(args.path)[1:]
 
     total = np.sum(datasets, axis=0)
 
-    line_cuts(total, extent, args.cmap)
+    line_cuts(total, extent, args.cmap, args.ylabel)
 
     if args.save:
         plt.savefig(args.save, bbox_inches="tight")

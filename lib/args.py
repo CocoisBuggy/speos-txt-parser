@@ -13,6 +13,11 @@ def get_args(argv=None):
         help="Matplotlib colormap name (default: viridis)",
     )
     parser.add_argument(
+        "--ylabel",
+        default="w/m2",
+        help="Y-axis label for irradiance values (default: w/m2)",
+    )
+    parser.add_argument(
         "--save",
         nargs="?",
         const="plot.png",

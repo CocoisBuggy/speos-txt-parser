@@ -22,7 +22,7 @@ plotters = [plot_channels, plot_irradiance]
 def main():
     args = get_args()
     base_save = args.save
-    paths = [args.path] if args.path else sorted(Path("data").glob("*.txt"))
+    paths = [args.path] if args.path else sorted(Path("data").rglob("*.txt"))
     for txt in tqdm(paths, desc="Generating plots"):
         args.path = str(txt)
         for plotter in plotters:

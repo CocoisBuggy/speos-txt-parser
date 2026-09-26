@@ -14,7 +14,7 @@ matrices under heading lines like `N - M degrees`. See `example/`.
 | -------------------- | ---------------------------------------------------------------------------------- |
 | `plot_channels.py`   | One subplot per elevation band (shared colour scale)                               |
 | `plot_irradiance.py` | Summed irradiance map + horizontal/vertical centre-line cuts                       |
-| `main.py`            | Runs both plotters in sequence over all data in the ./data dir with a progress bar |
+| `main.py`            | Runs both plotters in sequence over all .txt under ./data/ (recursive) with a progress bar |
 
 ## Example outputs
 
@@ -26,7 +26,7 @@ matrices under heading lines like `N - M degrees`. See `example/`.
 
 ```
 optional:
-  --path PATH, -p PATH  Path to .txt file (default: auto-detect all .txt in ./data/)
+  --path PATH, -p PATH  Path to .txt file (default: auto-detect all .txt under ./data/ recursively)
   --cmap CMAP           Matplotlib colormap (default: viridis)
   --save [FILE]         Save to file instead of showing (default: plot.png)
 ```

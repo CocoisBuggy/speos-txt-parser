@@ -44,27 +44,29 @@ def make_axes(fig):
     return ax_map, ax_horizontal, ax_vertical
 
 
-def plot_horizontal_cut(ax, x_coords, horizontal_profile, y_center, ylabel):
+def plot_horizontal_cut(ax, x_coords, horizontal_profile, y_center, ylabel, axis_unit):
     ax.plot(x_coords, horizontal_profile)
     ax.grid(True)
-    ax.set_xlabel("X (deg)")
+    ax.set_xlabel(f"X ({axis_unit})")
     ax.set_ylabel(ylabel)
-    ax.set_title(f"Y = {y_center:.2f} deg")
+    ax.set_title(f"Y = {y_center:.2f} {axis_unit}")
 
 
-def plot_vertical_cut(ax, vertical_profile, y_coords, x_center, extent, ylabel):
+def plot_vertical_cut(
+    ax, vertical_profile, y_coords, x_center, extent, ylabel, axis_unit
+):
     _, _, ymin, ymax = extent
 
     ax.plot(vertical_profile, y_coords)
     ax.grid(True)
     ax.set_xlabel(ylabel)
-    ax.set_ylabel("Y (deg)")
-    ax.set_title(f"X = {x_center:.2f} deg", pad=14)
+    ax.set_ylabel(f"Y ({axis_unit})")
+    ax.set_title(f"X = {x_center:.2f} {axis_unit}", pad=14)
     plt.setp(ax.get_xticklabels(), rotation=90)
     ax.set_ylim(ymin, ymax)
 
 
-def line_cuts(data, extent, cmap, ylabel):
+def line_cuts(data, extent, cmap, ylabel, axis_unit="deg"):
     centers = compute_centers(extent)
     x_center, y_center = centers
     x_coords, y_coords, vertical_profile, horizontal_profile = extract_cuts(
@@ -77,8 +79,12 @@ def line_cuts(data, extent, cmap, ylabel):
     im = plot_map(ax_map, data, extent, (x_center, y_center), cmap)
     fig.colorbar(im, ax=ax_map, label=ylabel)
 
-    plot_horizontal_cut(ax_horizontal, x_coords, horizontal_profile, y_center, ylabel)
-    plot_vertical_cut(ax_vertical, vertical_profile, y_coords, x_center, extent, ylabel)
+    plot_horizontal_cut(
+        ax_horizontal, x_coords, horizontal_profile, y_center, ylabel, axis_unit
+    )
+    plot_vertical_cut(
+        ax_vertical, vertical_profile, y_coords, x_center, extent, ylabel, axis_unit
+    )
 
     return fig, (ax_map, ax_horizontal, ax_vertical)
 
@@ -90,5 +96,5 @@ def plot_irradiance(data: IrradianceData, cmap: str, ylabel: str) -> Figure:
 
     total = np.sum(datasets, axis=0)
 
-    fig, _ = line_cuts(total, extent, cmap, ylabel)
+    fig, _ = line_cuts(total, extent, cmap, ylabel, data.axis_unit)
     return fig

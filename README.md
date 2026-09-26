@@ -12,7 +12,8 @@ The header layout follows the [Ansys SPEOS TXT map file format]
 (https://ansyshelp.ansys.com/public/Views/Secured/corp/v2521/en/Optis_UG_LAB/Optis/UG_Lab/txt_file_format_160517.html).
 In particular, header line 3 is the exported map's `UnitType`
 (0 = radiometric, 1 = photometric), which is how the value-unit label
-(W/m^2 or lm/m^2) is auto-detected.
+(W/m^2 or lm/m^2) is auto-detected, and header line 4 is the `AxisUnit`,
+which sets the axis labels.
 
 ## Usage
 

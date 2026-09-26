@@ -11,7 +11,7 @@ def plot_channels(data: IrradianceData, cmap: str, ylabel: str) -> Figure:
 
     High-angle bands beyond the sixth are discarded.
     """
-    norm, extent, datasets, bands, _ = data
+    norm, extent, datasets, bands, _, axis_unit = data
 
     shown = min(len(datasets), len(bands), 6)
 
@@ -26,9 +26,9 @@ def plot_channels(data: IrradianceData, cmap: str, ylabel: str) -> Figure:
             extent=extent,
             aspect="equal",
         )
-        ax.set_title(f"{tag} - {(i + 1) * 9} deg")
-        ax.set_xlabel("X (deg)")
-        ax.set_ylabel("Y (deg)")
+        ax.set_title(f"{tag} degrees")
+        ax.set_xlabel(f"X ({axis_unit})")
+        ax.set_ylabel(f"Y ({axis_unit})")
 
         if i == shown - 1:
             fig.colorbar(im, ax=axes[:, -1], label=ylabel)

@@ -25,10 +25,8 @@ matrices under heading lines like `N - M degrees`. See `example/`.
 ## Arguments
 
 ```
-positional:
-  path                  Path to .txt file
-
 optional:
+  --path PATH, -p PATH  Path to .txt file (default: auto-detect all .txt in ./data/)
   --cmap CMAP           Matplotlib colormap (default: viridis)
   --save [FILE]         Save to file instead of showing (default: plot.png)
 ```
@@ -36,9 +34,15 @@ optional:
 ## Use with your own data
 
 1. Export an irradiance cross-section from SPEOS as `.txt`.
-2. Run either script:
+2. Run the entry point or an individual script:
 
 ```bash
-python plot_channels.py your_data.txt
-python plot_irradiance.py your_data.txt --cmap magma --save my_plot.png
+# process all .txt files in ./data/ (auto-detected)
+python main.py
+
+# process a single file
+python main.py --path your_data.txt
+
+# individual scripts always need --path
+python plot_irradiance.py --path your_data.txt --cmap magma --save my_plot.png
 ```

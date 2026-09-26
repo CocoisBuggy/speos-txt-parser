@@ -124,26 +124,26 @@ class TestExtractCuts:
 
 class TestArgs:
     def test_default_ylabel(self):
-        args = get_args(["irrelevant.txt"])
+        args = get_args(["--path", "irrelevant.txt"])
         assert args.ylabel == "w/m2"
         assert args.cmap == "viridis"
         assert args.path == "irrelevant.txt"
         assert args.save is None
 
     def test_custom_ylabel(self):
-        args = get_args(["irrelevant.txt", "--ylabel", "W/m²"])
+        args = get_args(["--path", "irrelevant.txt", "--ylabel", "W/m²"])
         assert args.ylabel == "W/m²"
 
     def test_cmap(self):
-        args = get_args(["irrelevant.txt", "--cmap", "magma"])
+        args = get_args(["--path", "irrelevant.txt", "--cmap", "magma"])
         assert args.cmap == "magma"
 
     def test_save_default_name(self):
-        args = get_args(["irrelevant.txt", "--save"])
+        args = get_args(["--path", "irrelevant.txt", "--save"])
         assert args.save == "plot.png"
 
     def test_save_custom_path(self):
-        args = get_args(["irrelevant.txt", "--save", "out.png"])
+        args = get_args(["--path", "irrelevant.txt", "--save", "out.png"])
         assert args.save == "out.png"
 
 

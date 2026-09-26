@@ -6,7 +6,12 @@ def get_args(argv=None):
     parser = argparse.ArgumentParser(
         description="Parse and plot Ansys SPEOS irradiance cross-section data."
     )
-    parser.add_argument("path", help="Path to the irradiance TXT file")
+    parser.add_argument(
+        "--path",
+        "-p",
+        default=None,
+        help="Path to the irradiance TXT file (default: auto-detect from data/)",
+    )
     parser.add_argument(
         "--cmap",
         default="viridis",

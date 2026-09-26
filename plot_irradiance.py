@@ -1,8 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.figure import Figure
 
-from lib.data import read_data
+from lib.data import IrradianceData
 from lib.geometry import compute_centers, extract_cuts
+from lib.plotter import plotter
 
 
 def plot_map(ax, data, extent, centers, cmap):
@@ -24,7 +26,7 @@ def plot_map(ax, data, extent, centers, cmap):
 
 def make_axes(fig):
     """
-    Create a 2×2 GridSpec with a central map and side-line axes.
+    Create a 2x2 GridSpec with a central map and side-line axes.
     """
     gs = fig.add_gridspec(
         2,
@@ -81,20 +83,12 @@ def line_cuts(data, extent, cmap, ylabel):
     return fig, (ax_map, ax_horizontal, ax_vertical)
 
 
-def main(args):
-    extent, datasets, _ = read_data(args.path)[1:]
+@plotter(name="irradiance")
+def plot_irradiance(data: IrradianceData, cmap: str, ylabel: str) -> Figure:
+    """Total irradiance map with horizontal and vertical line cuts."""
+    extent, datasets = data.extent, data.datasets
 
     total = np.sum(datasets, axis=0)
 
-    line_cuts(total, extent, args.cmap, args.ylabel)
-
-    if args.save:
-        plt.savefig(args.save, bbox_inches="tight")
-    else:
-        plt.show()
-
-
-if __name__ == "__main__":
-    from lib.args import get_args
-
-    main(get_args())
+    fig, _ = line_cuts(total, extent, cmap, ylabel)
+    return fig

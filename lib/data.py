@@ -1,5 +1,40 @@
+from typing import NamedTuple
+
 import numpy as np
 from matplotlib.colors import Normalize
+
+
+class IrradianceData(NamedTuple):
+    """Parsed contents of one SPEOS irradiance cross-section file."""
+
+    norm: Normalize
+    extent: list[float]
+    datasets: list[np.ndarray]
+    bands: list[str]
+    unit: str
+
+
+# Line 3 of the export header is the UnitType field (see the Ansys "TXT File
+# Format" documentation: https://ansyshelp.ansys.com/public/Views/Secured/corp/v2521/en/Optis_UG_LAB/Optis/UG_Lab/txt_file_format_160517.html):
+# 0 = radiometric, 1 = photometric.
+_UNIT_LABELS = {
+    0: "W/m^2",  # radiometric irradiance
+    1: "lm/m^2",  # photometric irradiance (lux)
+}
+_DEFAULT_UNIT = "W/m^2"
+
+
+def _detect_unit(header_lines: list[str]) -> str:
+    """Map the header's UnitType value to an axis label.
+
+    Falls back to W/m^2 when the header line is missing or not a plain
+    integer (e.g. prose headers in hand-written files).
+    """
+    try:
+        unit_type = int(header_lines[2])
+    except (IndexError, ValueError):
+        return _DEFAULT_UNIT
+    return _UNIT_LABELS.get(unit_type, _DEFAULT_UNIT)
 
 
 def read_data(path):
@@ -7,8 +42,13 @@ def read_data(path):
 
     The expected format is a short header followed by space-separated
     irradiance matrices, each labelled with a ``N - M degrees`` marker.
-    Line 5 (0-indexed line 4) must contain four floats ``xmin xmax ymin ymax``
-    defining the spatial extent.
+    Line 3 of the header carries the exported map's UnitType (0 =
+    radiometric, 1 = photometric), which is used to pick the value-unit
+    label. Line 5 (0-indexed line 4) must contain four floats
+    ``xmin xmax ymin ymax`` defining the spatial extent.
+
+    Returns:
+        The parsed file contents (norm, extent, datasets, bands, unit).
     """
     with open(path) as file:
         raw = file.readlines()
@@ -18,6 +58,8 @@ def read_data(path):
             f"File {path!r} has only {len(raw)} line(s); "
             "expected at least 5 (header + extent line + data)."
         )
+
+    unit = _detect_unit(raw)
 
     try:
         xmin, xmax, ymin, ymax = [float(x) for x in raw[4].split()]
@@ -60,4 +102,4 @@ def read_data(path):
     vmax = max(d.max() for d in datasets)
     norm = Normalize(vmin=vmin, vmax=vmax)
 
-    return norm, extent, datasets, bands
+    return IrradianceData(norm, extent, datasets, bands, unit)

@@ -19,8 +19,8 @@ def get_args(argv=None):
     )
     parser.add_argument(
         "--ylabel",
-        default="w/m2",
-        help="Y-axis label for irradiance values (default: w/m2)",
+        default=None,
+        help="Label for irradiance values (default: auto-detect W/m^2 or lm/m^2 from the file)",
     )
     parser.add_argument(
         "--save",

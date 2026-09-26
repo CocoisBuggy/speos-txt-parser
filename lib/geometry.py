@@ -49,10 +49,10 @@ def extract_cuts(data, extent, centers=None):
 
     Notes
     -----
-    ``vertical_profile`` is the column slice ``data[:, col]`` — it traces
+    ``vertical_profile`` is the column slice ``data[:, col]`` -- it traces
     irradiance across rows (Y direction) at a fixed X position, so it is the
     **vertical** line cut.  ``horizontal_profile`` is the row slice
-    ``data[row]`` — it traces irradiance across columns (X direction) at a
+    ``data[row]`` -- it traces irradiance across columns (X direction) at a
     fixed Y position, so it is the **horizontal** line cut.
     """
     xmin, xmax, ymin, ymax = extent

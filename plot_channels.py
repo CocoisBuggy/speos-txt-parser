@@ -1,16 +1,26 @@
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
-from lib.data import read_data
+from lib.data import IrradianceData
+from lib.plotter import plotter
 
 
-def main(args):
-    norm, extent, datasets, bands = read_data(args.path)
+@plotter(name="channels")
+def plot_channels(data: IrradianceData, cmap: str, ylabel: str) -> Figure:
+    """First six elevation bands, one per subplot on a shared colour scale.
 
-    fig, axes = plt.subplots(2, 5, figsize=(20, 9), constrained_layout=True)
-    for i, (tag, ax) in enumerate(zip(bands, axes.flat)):
+    High-angle bands beyond the sixth are discarded.
+    """
+    norm, extent, datasets, bands, _ = data
+
+    shown = min(len(datasets), len(bands), 6)
+
+    fig, axes = plt.subplots(2, 3, figsize=(20, 9), constrained_layout=True)
+
+    for i, (tag, ax) in enumerate(zip(bands[:shown], axes.flat)):
         im = ax.imshow(
             datasets[i],
-            cmap=args.cmap,
+            cmap=cmap,
             norm=norm,
             origin="lower",
             extent=extent,
@@ -20,18 +30,12 @@ def main(args):
         ax.set_xlabel("X (deg)")
         ax.set_ylabel("Y (deg)")
 
-        if i == len(bands) - 1:
-            fig.colorbar(im, ax=axes[:, -1], label=args.ylabel)
+        if i == shown - 1:
+            fig.colorbar(im, ax=axes[:, -1], label=ylabel)
+
+    for ax in axes.flat[shown:]:
+        ax.set_visible(False)
 
     fig.suptitle("Irradiance by elevation band (shared scale)")
 
-    if args.save:
-        fig.savefig(args.save, bbox_inches="tight")
-    else:
-        plt.show()
-
-
-if __name__ == "__main__":
-    from lib.args import get_args
-
-    main(get_args())
+    return fig

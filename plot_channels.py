@@ -1,12 +1,9 @@
 import matplotlib.pyplot as plt
 
-from lib.args import get_args
 from lib.data import read_data
 
 
-def main():
-    args = get_args()
-
+def main(args):
     norm, extent, datasets, bands = read_data(args.path)
 
     fig, axes = plt.subplots(2, 5, figsize=(20, 9), constrained_layout=True)
@@ -35,4 +32,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    from lib.args import get_args
+
+    main(get_args())

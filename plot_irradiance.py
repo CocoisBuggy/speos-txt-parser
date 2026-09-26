@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from lib.args import get_args
 from lib.data import read_data
 from lib.geometry import compute_centers, extract_cuts
 
@@ -82,9 +81,7 @@ def line_cuts(data, extent, cmap, ylabel):
     return fig, (ax_map, ax_horizontal, ax_vertical)
 
 
-def main():
-    args = get_args()
-
+def main(args):
     extent, datasets, _ = read_data(args.path)[1:]
 
     total = np.sum(datasets, axis=0)
@@ -98,4 +95,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    from lib.args import get_args
+
+    main(get_args())

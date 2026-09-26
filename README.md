@@ -10,10 +10,11 @@ matrices under heading lines like `N - M degrees`. See `example/`.
 
 ## Scripts
 
-| Script               | What it plots                                                |
-| -------------------- | ------------------------------------------------------------ |
-| `plot_channels.py`   | One subplot per elevation band (shared colour scale)         |
-| `plot_irradiance.py` | Summed irradiance map + horizontal/vertical centre-line cuts |
+| Script               | What it plots                                                                      |
+| -------------------- | ---------------------------------------------------------------------------------- |
+| `plot_channels.py`   | One subplot per elevation band (shared colour scale)                               |
+| `plot_irradiance.py` | Summed irradiance map + horizontal/vertical centre-line cuts                       |
+| `main.py`            | Runs both plotters in sequence over all data in the ./data dir with a progress bar |
 
 ## Example outputs
 

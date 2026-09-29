@@ -27,34 +27,7 @@ def center_indices(data, extent, centers=None):
     return row, col
 
 
-def extract_cuts(data, extent, centers=None):
-    """Extract centre-row and centre-column line cuts from 2-D *data*.
-
-    Parameters
-    ----------
-    centers : (float, float) or None
-        Pre-computed (x_center, y_center).  When None the centre is derived
-        from *extent*.
-
-    Returns
-    -------
-    x_coords : ndarray
-        1-D array of x-coordinate values (column-major order).
-    y_coords : ndarray
-        1-D array of y-coordinate values (row-major order).
-    vertical_profile : ndarray
-        Values along the centre column (varying Y, the *x*-axis cut).
-    horizontal_profile : ndarray
-        Values along the centre row (varying X, the *y*-axis cut).
-
-    Notes
-    -----
-    ``vertical_profile`` is the column slice ``data[:, col]`` -- it traces
-    irradiance across rows (Y direction) at a fixed X position, so it is the
-    **vertical** line cut.  ``horizontal_profile`` is the row slice
-    ``data[row]`` -- it traces irradiance across columns (X direction) at a
-    fixed Y position, so it is the **horizontal** line cut.
-    """
+def extract_cuts(data, extent, centers=None, window=0):
     xmin, xmax, ymin, ymax = extent
     if centers is None:
         centers = compute_centers(extent)
@@ -65,4 +38,23 @@ def extract_cuts(data, extent, centers=None):
     x_coords = np.linspace(xmin, xmax, data.shape[1])
     y_coords = np.linspace(ymin, ymax, data.shape[0])
 
-    return x_coords, y_coords, vertical_profile, horizontal_profile
+    if window > 0:
+        row_start = max(0, row - window)
+        row_end = min(data.shape[0], row + window + 1)
+        col_start = max(0, col - window)
+        col_end = min(data.shape[1], col + window + 1)
+
+        horizontal_avg_profile = data[row_start:row_end].mean(axis=0)
+        vertical_avg_profile = data[:, col_start:col_end].mean(axis=1)
+    else:
+        horizontal_avg_profile = None
+        vertical_avg_profile = None
+
+    return (
+        x_coords,
+        y_coords,
+        vertical_profile,
+        horizontal_profile,
+        vertical_avg_profile,
+        horizontal_avg_profile,
+    )

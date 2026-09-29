@@ -44,8 +44,25 @@ def make_axes(fig):
     return ax_map, ax_horizontal, ax_vertical
 
 
-def plot_horizontal_cut(ax, x_coords, horizontal_profile, y_center, ylabel, axis_unit):
-    ax.plot(x_coords, horizontal_profile)
+def plot_horizontal_cut(
+    ax,
+    x_coords,
+    horizontal_profile,
+    y_center,
+    ylabel,
+    axis_unit,
+    horizontal_avg_profile=None,
+    window=0,
+):
+    ax.plot(x_coords, horizontal_profile, linestyle=":", alpha=0.5, label="Slice")
+    if horizontal_avg_profile is not None:
+        ax.plot(
+            x_coords,
+            horizontal_avg_profile,
+            linewidth=2,
+            label=f"Avg ±{window} px",
+        )
+    ax.legend(loc="best")
     ax.grid(True)
     ax.set_xlabel(f"X ({axis_unit})")
     ax.set_ylabel(ylabel)
@@ -53,11 +70,27 @@ def plot_horizontal_cut(ax, x_coords, horizontal_profile, y_center, ylabel, axis
 
 
 def plot_vertical_cut(
-    ax, vertical_profile, y_coords, x_center, extent, ylabel, axis_unit
+    ax,
+    vertical_profile,
+    y_coords,
+    x_center,
+    extent,
+    ylabel,
+    axis_unit,
+    vertical_avg_profile=None,
+    window=0,
 ):
     _, _, ymin, ymax = extent
 
-    ax.plot(vertical_profile, y_coords)
+    ax.plot(vertical_profile, y_coords, linestyle=":", alpha=0.5, label="Slice")
+    if vertical_avg_profile is not None:
+        ax.plot(
+            vertical_avg_profile,
+            y_coords,
+            linewidth=2,
+            label=f"Avg ±{window} px",
+        )
+    ax.legend(loc="best")
     ax.grid(True)
     ax.set_xlabel(ylabel)
     ax.set_ylabel(f"Y ({axis_unit})")
@@ -66,12 +99,17 @@ def plot_vertical_cut(
     ax.set_ylim(ymin, ymax)
 
 
-def line_cuts(data, extent, cmap, ylabel, axis_unit="deg"):
+def line_cuts(data, extent, cmap, ylabel, axis_unit="deg", window=5):
     centers = compute_centers(extent)
     x_center, y_center = centers
-    x_coords, y_coords, vertical_profile, horizontal_profile = extract_cuts(
-        data, extent, centers
-    )
+    (
+        x_coords,
+        y_coords,
+        vertical_profile,
+        horizontal_profile,
+        vertical_avg_profile,
+        horizontal_avg_profile,
+    ) = extract_cuts(data, extent, centers, window=window)
 
     fig = plt.figure(figsize=(10, 9), constrained_layout=True)
     ax_map, ax_horizontal, ax_vertical = make_axes(fig)
@@ -80,10 +118,25 @@ def line_cuts(data, extent, cmap, ylabel, axis_unit="deg"):
     fig.colorbar(im, ax=ax_map, label=ylabel)
 
     plot_horizontal_cut(
-        ax_horizontal, x_coords, horizontal_profile, y_center, ylabel, axis_unit
+        ax_horizontal,
+        x_coords,
+        horizontal_profile,
+        y_center,
+        ylabel,
+        axis_unit,
+        horizontal_avg_profile=horizontal_avg_profile,
+        window=window,
     )
     plot_vertical_cut(
-        ax_vertical, vertical_profile, y_coords, x_center, extent, ylabel, axis_unit
+        ax_vertical,
+        vertical_profile,
+        y_coords,
+        x_center,
+        extent,
+        ylabel,
+        axis_unit,
+        vertical_avg_profile=vertical_avg_profile,
+        window=window,
     )
 
     return fig, (ax_map, ax_horizontal, ax_vertical)
